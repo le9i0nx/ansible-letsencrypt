@@ -1,0 +1,47 @@
+---
+
+# See README.md for details. Commented out to enforce mandatory variable!
+#lcsh_contactemail:
+
+# See README.md for details. Commented out to enforce mandatory variable!
+#lcsh_domains:
+
+
+# See README.md for details. Commented out to enforce mandatory variable!
+#lcsh_deploy_cert:
+
+
+# See README.md for details.
+lcsh_challengesdir: /var/www/letsencrypt.sh/
+
+
+
+# unusual variables, normaly you don't need change any of them.
+
+
+# username for privilege dropping.
+lcsh_username: letsencrypt.sh
+# usergroup for privilege dropping.
+lcsh_usergroup: letsencrypt.sh
+# home for {{ lcsh_username }} and directory for letsencrypt binaries
+lcsh_userhome: /home/letsencrypt.sh
+
+
+# directory for configuration files.
+lcsh_configdir: /etc/letsencrypt.sh
+# Regenerate private keys instead of just signing new certificates on renewal
+lcsh_privatekeyrenew: yes
+# Option to add CSR-flag indicating OCSP stapling to be mandatory
+lcsh_ocsp_must_staple: no
+
+
+# The acme api to call, for tests use staging api
+lcsh_acme_api: https://acme-v01.api.letsencrypt.org/directory
+#lcsh_acme_api: https://acme-staging.api.letsencrypt.org/directory
+
+
+# url and revison for checkout letsencrypt.sh
+lcsh_repourl: https://github.com/lukas2511/letsencrypt.sh.git
+# use here only versions you have reviewed by your self, letsencrypt.sh is
+# working with your secret key, so be carefull!
+lcsh_commit: afabfff06e2dece1772ed788ac41ca0d297ab49b

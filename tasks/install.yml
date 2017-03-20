@@ -13,4 +13,12 @@
   - openssl
   - sed
 
+- name: copy dehydrated
+  copy:
+    src:    'usr/local/bin/dehydrated'
+    dest:   '/usr/local/bin/dehydrated'
+    owner:  'root'
+    group:  'root'
+    mode:   '0755'
+
 ## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

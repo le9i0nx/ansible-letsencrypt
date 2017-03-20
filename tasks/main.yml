@@ -9,9 +9,7 @@
     role_letsencrypt_register_install: ""
   when: role_letsencrypt_register_install is not defined
 
-- include: packages.yml
 - include: user_and_dirs.yml
-- include: clone_repo.yml
 - include: configure.yml
 - include: cron_with_deploy_scripts.yml
 

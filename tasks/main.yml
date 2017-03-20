@@ -1,0 +1,14 @@
+---
+
+- name: install
+  include: install.yml
+  when: role_letsencrypt_register_install is not defined
+
+- name: install register
+  set_fact:
+    role_letsencrypt_register_install: ""
+  when: role_letsencrypt_register_install is not defined
+
+- include: config.yml
+
+## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

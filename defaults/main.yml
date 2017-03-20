@@ -1,0 +1,23 @@
+---
+
+letsencrypt__domains: []
+
+letsencrypt__domains_explams: |
+  example.com www.example.com wiki.example.com
+
+letsencrypt__deploy_cert: |
+  echo "Code"
+
+letsencrypt__acme_dir: /var/www/dehydrated/
+
+# directory for configuration files.
+letsencrypt__configdir: /etc/dehydrated
+
+# The acme api to call, for tests use staging api
+letsencrypt__acme_api: https://acme-v01.api.letsencrypt.org/directory
+#lcsh_acme_api: https://acme-staging.api.letsencrypt.org/directory
+
+letsencrypt__user: dehydrated
+letsencrypt__group: dehydrated
+
+## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

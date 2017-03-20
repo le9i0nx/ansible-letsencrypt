@@ -1,9 +1,17 @@
 ---
 
-letsencrypt__domains: []
+letsencrypt__domains_item: []
 
-letsencrypt__domains_explams: |
+letsencrypt__domains: |
+  {% for item in letsencrypt__domains_item %}{{ item }} {% endfor %}
+
+letsencrypt__domains_explams:
   example.com www.example.com wiki.example.com
+
+letsencrypt__domains_item_explams:
+  - example.com
+  - www.example.com
+  - wiki.example.com
 
 letsencrypt__deploy_cert: |
   echo "Code"

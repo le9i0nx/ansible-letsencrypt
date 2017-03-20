@@ -6,12 +6,12 @@
     name: "{{ item }}"
     state: present
   with_items:
-  - bash
-  - curl
-  - grep
-  - mktemp
-  - openssl
-  - sed
+    - bash
+    - curl
+    - grep
+    - mktemp
+    - openssl
+    - sed
 
 - name: copy dehydrated
   copy:
@@ -20,5 +20,31 @@
     owner:  'root'
     group:  'root'
     mode:   '0755'
+
+- name: Create group for user
+  group:
+    name: "{{ letsencrypt__group }}"
+
+- name: Create user
+  user:
+    name: "{{ letsencrypt__user }}"
+    group: "{{ letsencrypt__group }}"
+    system: yes
+
+- name: Create directories
+  file:
+    path:   '{{ item.path }}'
+    state:  '{{ item.state  | default("directory") }}'
+    owner:  '{{ item.owner  | default("root") }}'
+    group:  '{{ item.group  | default("root") }}'
+    mode:   '{{ item.mode   | default("0755") }}'
+  with_items:
+    - { path: '{{ letsencrypt__acme_dir }}', owner: "{{ letsencrypt__user }}", group: "{{ letsencrypt__group }}" }
+    - { path: '{{ letsencrypt__configdir }}' }
+    - { path: '{{ letsencrypt__configdir }}/accounts', owner: "{{ letsencrypt__user }}", group: "{{ letsencrypt__group }}", mode: "0700" }
+    - { path: '{{ letsencrypt__configdir }}/archive', owner: "{{ letsencrypt__user }}", group: "{{ letsencrypt__group }}", mode: "0700" }
+    - { path: '{{ letsencrypt__configdir }}/certs', owner: "{{ letsencrypt__user }}", group: "{{ letsencrypt__group }}", mode: "0700" }
+    - { path: '{{ letsencrypt__configdir }}/to_deploy', owner: "{{ letsencrypt__user }}", group: "{{ letsencrypt__group }}", mode: "0750" }
+  when: (item.path is defined and item.path)
 
 ## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

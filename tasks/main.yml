@@ -9,8 +9,6 @@
     role_letsencrypt_register_install: ""
   when: role_letsencrypt_register_install is not defined
 
-- include: user_and_dirs.yml
-- include: configure.yml
-- include: cron_with_deploy_scripts.yml
+- include: config.yml
 
 ## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

@@ -6,7 +6,7 @@
     dest: "{{ letsencrypt__configdir }}/domains.txt"
     owner: "root"
     group: "root"
-    mode: 0544
+    mode: "0544"
 
 - name: Create configuration file
   template:
@@ -16,8 +16,8 @@
     group:  '{{ item.group  | default("root") }}'
     mode:   '{{ item.mode   | default("0755") }}'
   with_items:
-    - { src: "etc/letsencrypt/config.j2", dest: "{{ letsencrypt__configdir }}/config", mode: 0544 }
-    - { src: "etc/letsencrypt/hook.sh.j2", dest: "{{ letsencrypt__configdir }}/hook.sh", owner: "{{ letsencrypt__user }}", group: "{{ letsencrypt__group }}", mode: "0700" }
+    - { src: "etc/letsencrypt/config.j2", dest: "{{ letsencrypt__configdir }}/config", mode: "0544" }
+    - { src: "etc/letsencrypt/hook.sh.j2", dest: "{{ letsencrypt__configdir }}/hook.sh", mode: "0755" }
     - { src: "usr/local/sbin/deploy_cert.sh.j2", dest: "/usr/local/sbin/deploy_cert.sh", mode: "0700" }
     - { src: "etc/cron.daily/letsencrypt_sh.j2", dest: "/etc/cron.daily/letsencrypt_sh", mode: "0700" }
 

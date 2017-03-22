@@ -10,5 +10,6 @@
   when: role_letsencrypt_register_install is not defined
 
 - include: config.yml
+- include: ssl_gen.yml
 
 ## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

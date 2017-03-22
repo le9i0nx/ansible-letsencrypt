@@ -5,12 +5,12 @@
 
 
 function deploy_cert {
-	local DOMAIN="${1}" KEYFILE="${2}" CERTFILE="${3}" FULLCHAINFILE="${4}" CHAINFILE="${5}" TIMESTAMP="${6}"
-	set -o xtrace # use tracing for user defined code
+    local DOMAIN="${1}" KEYFILE="${2}" CERTFILE="${3}" FULLCHAINFILE="${4}" CHAINFILE="${5}" TIMESTAMP="${6}"
+#    set -o xtrace # use tracing for user defined code
 
 # ========== start code from ansible varibale ============
 {{ letsencrypt__deploy_cert | mandatory }}
 # ========== end code from ansible varibale ==============
 
-	set +o xtrace
+#    set +o xtrace
 }

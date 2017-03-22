@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# letsencrypt.sh cron weekly
+# letsencrypt.sh cron daily
 set -o nounset -o errexit -o pipefail
 
 LCSH_USER="{{ letsencrypt__user }}"
@@ -14,11 +14,12 @@ function log() {
 log "cron run $(date -Is) start"
 
 # register as letsencrypt
-su "$LCSH_USER" --command "$LCSH_BIN --config $LCSH_CONF --register --accept-terms"
+su "$LCSH_USER" --command "$LCSH_BIN --config $LCSH_CONF --register --accept-terms" || true
 
 # start letsencrypt.sh with option --cron
-su "$LCSH_USER" --command "$LCSH_BIN --config $LCSH_CONF --cron"
+su "$LCSH_USER" --command "$LCSH_BIN --config $LCSH_CONF --cron" || true
 
+echo ""
 log "letsencrypt.sh finished, start deploy certificates"
 
 function deploy_cert {
@@ -32,12 +33,13 @@ source "/usr/local/sbin/deploy_cert.sh"
 shopt -s nullglob
 for task in $TO_DEPLOY_DIR/*
 do
-    deploy_cert $(cat "$task") &>> "$LOG"
+    deploy_cert $(cat "$task") || true
     if [[ $? == 0 ]];
     then
+        echo "rm $task"
         rm "$task"
     else
-        echo "Certificate deployment for domain $(basename $task) failed!
+        echo "Certificate deploy ment for domain $(basename $task) failed!
             Please check $LOG for details!"
     fi
 done
@@ -45,7 +47,7 @@ done
 log "certificates deployed, start cleanup"
 
 # start letsencrypt.sh with option --cleanup
-su "$LCSH_USER" --command "$LCSH_BIN --config $LCSH_CONF --cleanup"
+su "$LCSH_USER" --command "$LCSH_BIN --config $LCSH_CONF --cleanup" || true
 
 log "cron run $(date -Is) end"
 exit 0

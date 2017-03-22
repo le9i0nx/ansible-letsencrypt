@@ -1,0 +1,77 @@
+---
+
+- name: Get domain
+  set_fact:
+    letsencrypt__domain_list: "{{ item.split(' ') }}"
+  when: item|d()
+
+- name: Check cert
+  stat:
+    path: "{{ letsencrypt__configdir }}/certs/{{ letsencrypt__domain_list.0 }}/fake/privkey.pem"
+  register: letsencrypt__register_ssl
+  when: letsencrypt__domain_list|d() and letsencrypt__domain_list.0|d()
+
+- name: Create directories
+  file:
+    path: "{{ letsencrypt__configdir }}/certs/{{ letsencrypt__domain_list.0 }}/fake/"
+    state: 'directory'
+    owner: '{{ letsencrypt__user }}'
+    group: '{{ letsencrypt__group }}'
+    mode: '0700'
+  when: letsencrypt__domain_list|d() and letsencrypt__domain_list.0|d()
+
+- name: Generate Self Signed Certificate
+  shell: openssl req -new -x509 -days 9999 -sha256 -nodes -out {{ letsencrypt__configdir }}/certs/{{ letsencrypt__domain_list.0 }}/fake/fullchain.pem -keyout {{ letsencrypt__configdir }}/certs/{{ letsencrypt__domain_list.0 }}/fake/privkey.pem -subj "/C=EN"
+  register: letsencrypt__register_ssl_gen
+  when: letsencrypt__register_ssl|d() and
+        letsencrypt__register_ssl.stat|d() and
+        letsencrypt__register_ssl.stat.exists is defined and
+        letsencrypt__register_ssl.stat.exists == False
+
+- name: cp key
+  command: cp {{ letsencrypt__configdir }}/certs/{{ letsencrypt__domain_list.0 }}/fake/fullchain.pem {{ letsencrypt__configdir }}/certs/{{ letsencrypt__domain_list.0 }}/fake/{{ item_loop }}
+  with_items:
+    - chain.pem
+    - cert.pem
+  loop_control:
+    loop_var: item_loop
+  when: letsencrypt__register_ssl_gen|d() and
+        letsencrypt__register_ssl_gen.rc is defined and
+        letsencrypt__register_ssl_gen.rc == 0
+
+- name: chown directories
+  file:
+    path: "{{ letsencrypt__configdir }}/certs/{{ letsencrypt__domain_list.0 }}/fake/{{ item_loop }}"
+    state: 'file'
+    owner: '{{ letsencrypt__user }}'
+    group: '{{ letsencrypt__group }}'
+    mode: '0600'
+  with_items:
+    - cert.pem
+    - chain.pem
+    - fullchain.pem
+    - privkey.pem
+  loop_control:
+    loop_var: item_loop
+  when: letsencrypt__register_ssl_gen|d() and
+        letsencrypt__register_ssl_gen.rc is defined and
+        letsencrypt__register_ssl_gen.rc == 0
+
+- name: template gen
+  template:
+    src: "etc/letsencrypt/to_deploy/fake_certs.j2"
+    dest: '{{ letsencrypt__configdir }}/to_deploy/{{ letsencrypt__domain_list.0 }}'
+    mode: '0600'
+  when: letsencrypt__register_ssl_gen|d() and
+        letsencrypt__register_ssl_gen.rc is defined and
+        letsencrypt__register_ssl_gen.rc == 0
+
+- name: gen letsencrypt cert
+  shell: /etc/cron.daily/letsencrypt_sh
+  notify:
+    - letsencrypt gen
+  when: letsencrypt__register_ssl_gen|d() and
+        letsencrypt__register_ssl_gen.rc is defined and
+        letsencrypt__register_ssl_gen.rc == 0
+
+## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

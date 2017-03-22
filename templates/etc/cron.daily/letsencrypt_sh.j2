@@ -1,27 +1,31 @@
 #!/usr/bin/env bash
 #
-# letsencrypt.sh cron weekly
+# letsencrypt.sh cron daily
 set -o nounset -o errexit -o pipefail
 
 LCSH_USER="{{ letsencrypt__user }}"
 LCSH_BIN="/usr/local/bin/dehydrated"
+LCSH_CONF="{{ letsencrypt__configdir }}/config"
 TO_DEPLOY_DIR="{{ letsencrypt__configdir }}/to_deploy"
-
 
 function log() {
 	echo "============= ${1} =============="
 }
 log "cron run $(date -Is) start"
 
-# start letsencrypt.sh with option --cron
-su "$LCSH_USER" --command "$LCSH_BIN --cron"
+# register as letsencrypt
+su "$LCSH_USER" --command "$LCSH_BIN --config $LCSH_CONF --register --accept-terms" || true
 
+# start letsencrypt.sh with option --cron
+su "$LCSH_USER" --command "$LCSH_BIN --config $LCSH_CONF --cron" || true
+
+echo ""
 log "letsencrypt.sh finished, start deploy certificates"
 
 function deploy_cert {
-	# fallback function for syntax errrors in ansible lcsh_deploy_cert variable.
-	echo "Certificate deployment failed for domain $1!
-		Deploy script has syntax errrors, check your lcsh_deploy_cert variable!"
+    # fallback function for syntax errrors in ansible lcsh_deploy_cert variable.
+    echo "Certificate deployment failed for domain $1!
+        Deploy script has syntax errrors, check your lcsh_deploy_cert variable!"
 }
 # try to source ansible configured function deploy_cert
 source "/usr/local/sbin/deploy_cert.sh"
@@ -29,20 +33,21 @@ source "/usr/local/sbin/deploy_cert.sh"
 shopt -s nullglob
 for task in $TO_DEPLOY_DIR/*
 do
-	deploy_cert $(cat "$task") &>> "$LOG"
-	if [[ $? == 0 ]];
-	then
-		rm "$task"
-	else
-		echo "Certificate deployment for domain $(basename $task) failed!
-			Please check $LOG for details!"
-	fi
+    deploy_cert $(cat "$task") || true
+    if [[ $? == 0 ]];
+    then
+        echo "rm $task"
+        rm "$task"
+    else
+        echo "Certificate deploy ment for domain $(basename $task) failed!
+            Please check $LOG for details!"
+    fi
 done
 
 log "certificates deployed, start cleanup"
 
 # start letsencrypt.sh with option --cleanup
-su "$LCSH_USER" --command "$LCSH_BIN --cleanup"
+su "$LCSH_USER" --command "$LCSH_BIN --config $LCSH_CONF --cleanup" || true
 
 log "cron run $(date -Is) end"
 exit 0

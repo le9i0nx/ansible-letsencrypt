@@ -16,16 +16,16 @@ letsencrypt__domains_item_explams:
 letsencrypt__deploy_cert: |
   echo "Code"
 
-letsencrypt__acme_dir: /var/www/dehydrated/
+letsencrypt__acme_dir: /var/www/letsencrypt/
 
 # directory for configuration files.
-letsencrypt__configdir: /etc/dehydrated
+letsencrypt__configdir: /etc/letsencrypt
 
 # The acme api to call, for tests use staging api
 letsencrypt__acme_api: https://acme-v01.api.letsencrypt.org/directory
-#lcsh_acme_api: https://acme-staging.api.letsencrypt.org/directory
+#letsencrypt__acme_api: https://acme-staging.api.letsencrypt.org/directory
 
-letsencrypt__user: dehydrated
-letsencrypt__group: dehydrated
+letsencrypt__user: letsencrypt
+letsencrypt__group: letsencrypt
 
 ## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

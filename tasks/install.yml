@@ -39,7 +39,7 @@
     mode:   '{{ item.mode   | default("0755") }}'
   with_items:
     - { path: '{{ letsencrypt__acme_dir }}', owner: "{{ letsencrypt__user }}", group: "{{ letsencrypt__group }}" }
-    - { path: '{{ letsencrypt__configdir }}' }
+    - { path: '{{ letsencrypt__configdir }}', owner: "{{ letsencrypt__user }}" }
     - { path: '{{ letsencrypt__configdir }}/accounts', owner: "{{ letsencrypt__user }}", group: "{{ letsencrypt__group }}", mode: "0700" }
     - { path: '{{ letsencrypt__configdir }}/archive', owner: "{{ letsencrypt__user }}", group: "{{ letsencrypt__group }}", mode: "0700" }
     - { path: '{{ letsencrypt__configdir }}/certs', owner: "{{ letsencrypt__user }}", group: "{{ letsencrypt__group }}", mode: "0700" }

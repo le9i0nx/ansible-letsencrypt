@@ -1,0 +1,4 @@
+---
+- name: letsencrypt gen
+  shell: /etc/cron.daily/letsencrypt_sh
+

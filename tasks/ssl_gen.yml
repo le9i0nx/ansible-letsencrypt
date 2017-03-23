@@ -67,7 +67,10 @@
         letsencrypt__register_ssl_gen.rc == 0
 
 - name: gen letsencrypt cert
-  shell: /etc/cron.daily/letsencrypt_sh
+  systemd:
+    state: started
+    name: letsencrypt
+    daemon_reload: yes
   notify:
     - letsencrypt gen
   when: letsencrypt__register_ssl_gen|d() and

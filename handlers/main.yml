@@ -1,4 +1,7 @@
 ---
 - name: letsencrypt gen
-  shell: /etc/cron.daily/letsencrypt_sh
+  systemd:
+    state: started
+    name: letsencrypt
+    daemon_reload: yes
 

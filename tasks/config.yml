@@ -8,6 +8,7 @@
     group: "root"
     mode: "0544"
   notify:
+    - letsencrypt enabled
     - letsencrypt gen
 
 - name: Create configuration file
@@ -16,13 +17,13 @@
     dest:   '{{ item.dest }}'
     owner:  '{{ item.owner  | default("root") }}'
     group:  '{{ item.group  | default("root") }}'
-    mode:   '{{ item.mode   | default("0755") }}'
+    mode:   '{{ item.mode   | default("0644") }}'
   with_items:
     - { src: "etc/letsencrypt/config.j2", dest: "{{ letsencrypt__configdir }}/config", mode: "0544" }
     - { src: "etc/letsencrypt/hook.sh.j2", dest: "{{ letsencrypt__configdir }}/hook.sh", mode: "0755" }
     - { src: "usr/local/sbin/deploy_cert.sh.j2", dest: "/usr/local/sbin/deploy_cert.sh", mode: "0700" }
     - { src: "usr/local/sbin/letsencrypt.sh.j2", dest: "/usr/local/sbin/letsencrypt.sh", mode: "0700" }
-    - { src: "etc/systemd/system/letsencrypt.timer.j2", dest: "/etc/systemd/systemd/letsencrypt.timer" }
-    - { src: "etc/systemd/system/letsencrypt.service.j2", dest: "/etc/systemd/systemd/letsencrypt.service" }
+    - { src: "etc/systemd/system/letsencrypt.timer.j2", dest: "/etc/systemd/system/letsencrypt.timer" }
+    - { src: "etc/systemd/system/letsencrypt.service.j2", dest: "/etc/systemd/system/letsencrypt.service" }
 
 ## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

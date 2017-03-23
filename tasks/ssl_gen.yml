@@ -67,11 +67,9 @@
         letsencrypt__register_ssl_gen.rc == 0
 
 - name: gen letsencrypt cert
-  systemd:
-    state: started
-    name: letsencrypt
-    daemon_reload: yes
+  shell: /usr/local/sbin/letsencrypt.sh
   notify:
+    - letsencrypt enabled
     - letsencrypt gen
   when: letsencrypt__register_ssl_gen|d() and
         letsencrypt__register_ssl_gen.rc is defined and

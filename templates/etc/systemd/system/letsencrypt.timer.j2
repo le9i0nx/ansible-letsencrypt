@@ -1,0 +1,11 @@
+[Unit]
+Description=Run letsencrypt daily and on boot
+
+[Timer]
+OnBootSec=15min
+OnCalendar=daily
+RandomizedDelaySec=2m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

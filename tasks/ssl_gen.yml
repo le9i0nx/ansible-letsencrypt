@@ -67,8 +67,9 @@
         letsencrypt__register_ssl_gen.rc == 0
 
 - name: gen letsencrypt cert
-  shell: /etc/cron.daily/letsencrypt_sh
+  shell: /usr/local/sbin/letsencrypt.sh
   notify:
+    - letsencrypt enabled
     - letsencrypt gen
   when: letsencrypt__register_ssl_gen|d() and
         letsencrypt__register_ssl_gen.rc is defined and

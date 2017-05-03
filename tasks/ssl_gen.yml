@@ -21,7 +21,7 @@
   when: letsencrypt__domain_list|d() and letsencrypt__domain_list.0|d()
 
 - name: Generate Self Signed Certificate
-  shell: openssl req -new -x509 -days 9999 -sha256 -nodes -out {{ letsencrypt__configdir }}/certs/{{ letsencrypt__domain_list.0 }}/fake/fullchain.pem -keyout {{ letsencrypt__configdir }}/certs/{{ letsencrypt__domain_list.0 }}/fake/privkey.pem -subj "/C=EN"
+  shell: openssl req -new -x509 -days 9999 -sha256 -nodes -out {{ letsencrypt__configdir }}/certs/{{ letsencrypt__domain_list.0 }}/fake/fullchain.pem -keyout {{ letsencrypt__configdir }}/certs/{{ letsencrypt__domain_list.0 }}/fake/privkey.pem -subj "/C=EN/CN={{letsencrypt__domain_list.0}}"
   register: letsencrypt__register_ssl_gen
   when: letsencrypt__register_ssl|d() and
         letsencrypt__register_ssl.stat|d() and
@@ -60,7 +60,7 @@
 - name: template gen
   template:
     src: "etc/letsencrypt/to_deploy/fake_certs.j2"
-    dest: '{{ letsencrypt__configdir }}/to_deploy/{{ letsencrypt__domain_list.0 }}'
+    dest: '{{ letsencrypt__configdir }}/to_deploy/00_fake_{{ letsencrypt__domain_list.0 }}'
     mode: '0600'
   when: letsencrypt__register_ssl_gen|d() and
         letsencrypt__register_ssl_gen.rc is defined and

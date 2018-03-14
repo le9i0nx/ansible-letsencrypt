@@ -16,7 +16,7 @@
 #IP_VERSION=
 
 # Path to certificate authority (default: https://acme-v01.api.letsencrypt.org/directory)
-#CA="https://acme-v01.api.letsencrypt.org/directory"
+#CA="https://acme-v02.api.letsencrypt.org/directory"
 CA="{{ letsencrypt__acme_api }}"
 
 # Path to certificate authority license terms redirect (default: https://acme-v01.api.letsencrypt.org/terms)
@@ -27,6 +27,7 @@ CA="{{ letsencrypt__acme_api }}"
 
 # Which challenge should be used? Currently http-01 and dns-01 are supported
 #CHALLENGETYPE="http-01"
+CHALLENGETYPE="{{ letsencrypt__acme_type }}"
 
 # Path to a directory containing additional config files, allowing to override
 # the defaults found in the main configuration file. Additional config files

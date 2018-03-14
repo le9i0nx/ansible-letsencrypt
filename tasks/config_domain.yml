@@ -1,0 +1,35 @@
+---
+
+- name: Create domain configuration file
+  copy:
+    content: "{{ item.domain }}\n"
+    dest: "{{ letsencrypt__configdir }}/domains/{{ item.domain.split()[0] }}.txt"
+    owner: "root"
+    group: "root"
+    mode: "0444"
+
+- name: Create directories domain
+  file:
+    path:   '{{ letsencrypt__configdir }}/certs/{{ item.domain.split()[0] }}'
+    state:  'directory'
+    owner:  '{{ letsencrypt__user }}'
+    group:  '{{ letsencrypt__group }}'
+    mode:   '0700'
+
+- name: Create config domain
+  template:
+    src:    'etc/letsencrypt/certs/config'
+    dest:   '{{ letsencrypt__configdir }}/certs/{{ item.domain.split()[0] }}/config'
+    owner:  'root'
+    group:  'root'
+    mode:   '0444'
+
+- name: Create hook domain
+  template:
+    src:    'etc/letsencrypt/certs/hook.sh'
+    dest:   '{{ letsencrypt__configdir }}/certs/{{ item.domain.split()[0] }}/hook.sh'
+    owner:  'root'
+    group:  'root'
+    mode:   '0755'
+
+## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

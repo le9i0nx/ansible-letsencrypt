@@ -1,12 +1,19 @@
 ---
 
+- name: list domains
+  shell: cat {{ letsencrypt__configdir }}/domains/*.txt
+  register: role_letsencrypt_register_domains
+  changed_when: false
+  check_mode: no
+
+
 - name: Create domain configuration file
   copy:
-    content: "{{ letsencrypt__domains | mandatory }}"
+    content: "{{ role_letsencrypt_register_domains.stdout | mandatory }}"
     dest: "{{ letsencrypt__configdir }}/domains.txt"
     owner: "root"
     group: "root"
-    mode: "0544"
+    mode: "0444"
   notify:
     - letsencrypt enabled
     - letsencrypt gen
@@ -19,8 +26,8 @@
     group:  '{{ item.group  | default("root") }}'
     mode:   '{{ item.mode   | default("0644") }}'
   with_items:
-    - { src: "etc/letsencrypt/config.j2", dest: "{{ letsencrypt__configdir }}/config", mode: "0544" }
-    - { src: "etc/letsencrypt/hook.sh.j2", dest: "{{ letsencrypt__configdir }}/hook.sh", mode: "0755" }
+    - { src: "etc/letsencrypt/config.j2", dest: "{{ letsencrypt__configdir }}/config", mode: "0444" }
+    - { src: "etc/letsencrypt/certs/hook.sh", dest: "{{ letsencrypt__configdir }}/hook.sh", mode: "0755" }
     - { src: "usr/local/sbin/deploy_cert.sh.j2", dest: "/usr/local/sbin/deploy_cert.sh", mode: "0700" }
     - { src: "usr/local/sbin/letsencrypt.sh.j2", dest: "/usr/local/sbin/letsencrypt.sh", mode: "0700" }
     - { src: "etc/systemd/system/letsencrypt.timer.j2", dest: "/etc/systemd/system/letsencrypt.timer" }

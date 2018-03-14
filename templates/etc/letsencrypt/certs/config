@@ -1,0 +1,8 @@
+{% if item|d() %}
+{%  if (item.config|d() and item.config.CHALLENGETYPE|d()) %}
+CHALLENGETYPE="{{ item.config.CHALLENGETYPE }}"
+{%  endif %}
+{%  if item.hook|d() %}
+HOOK="{{ letsencrypt__configdir }}/certs/{{ item.domain.split()[0] }}/hook.sh"
+{%  endif %}
+{% endif %}

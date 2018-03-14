@@ -2,7 +2,7 @@
 
 - name: Get domain
   set_fact:
-    letsencrypt__domain_list: "{{ item.split(' ') }}"
+    letsencrypt__domain_list: "{{ item.domain.split(' ') }}"
   when: item|d()
 
 - name: Check cert

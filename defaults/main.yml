@@ -1,28 +1,40 @@
 ---
 
-letsencrypt__domains_item: []
-
-letsencrypt__domains: |
-  {% for item in letsencrypt__domains_item %}{{ item }} {% endfor %}
-
-letsencrypt__domains_explams:
-  example.com www.example.com wiki.example.com
-
-letsencrypt__domains_item_explams:
-  - example.com
-  - www.example.com
-  - wiki.example.com
+letsencrypt__conf: '{{ letsencrypt__conf_default + letsencrypt__conf_group + letsencrypt__conf_host }}'
+letsencrypt__conf_default: []
+letsencrypt__conf_group: []
+letsencrypt__conf_host: []
+#  - domain: "example.com *.example.com"
+#    config:
+#      CHALLENGETYPE: "dns-01"
+#    hook:
+#      deploy_challenge:
+#        - curl "https://api.reg.ru/api/regru2/zone/add_txt?username=test&password=***&domain_name=${DOMAIN}&subdomain=_acme-challenge.${DOMAIN}.&text=${TOKEN_VALUE}"
+#        - sleep 60
+#      clean_challenge:
+#        - curl "https://api.reg.ru/api/regru2/zone/remove_record?username=test&password=***&domain_name=${DOMAIN}&subdomain=_acme-challenge.${DOMAIN}.&content=${TOKEN_VALUE}&record_type=TXT"
 
 letsencrypt__deploy_cert: |
   echo "Code"
+#  mkdir -p /etc/nginx/ssl_/${DOMAIN}
+#  cp "${KEYFILE}" "${CERTFILE}" "${FULLCHAINFILE}" "${CHAINFILE}" /etc/nginx/ssl/${DOMAIN}
+#  chown root:root /etc/nginx/ssl/${DOMAIN}/*
+#  chmod 600 /etc/nginx/ssl/${DOMAIN}/privkey.pem
+#  chmod 644 /etc/nginx/ssl/${DOMAIN}/cert.pem
+#  chmod 644 /etc/nginx/ssl/${DOMAIN}/chain.pem
+#  chmod 644 /etc/nginx/ssl/${DOMAIN}/fullchain.pem
+#
+#  systemctl reload nginx
 
-letsencrypt__acme_dir: /var/www/letsencrypt/
+letsencrypt__acme_type: "http-01"
+
+letsencrypt__acme_dir: /var/www/letsencrypt/.well-known/acme-challenge/
 
 # directory for configuration files.
 letsencrypt__configdir: /etc/letsencrypt
 
 # The acme api to call, for tests use staging api
-letsencrypt__acme_api: https://acme-v01.api.letsencrypt.org/directory
+letsencrypt__acme_api: https://acme-v02.api.letsencrypt.org/directory
 #letsencrypt__acme_api: https://acme-staging.api.letsencrypt.org/directory
 
 letsencrypt__user: letsencrypt
